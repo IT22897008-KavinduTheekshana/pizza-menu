@@ -69,15 +69,23 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Our menu</h2>
 
-      <ul className="pizzas">
-        {pizzaData.map((pizza) => (
-          <Pizza pizzaObj={pizza} key={pizza.name} />
-        ))}
-      </ul>
+      {numPizzas > 0 ? (
+        <ul className="pizzas">
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>Sorry, we're still working on our menu, please come back later :)</p>
+      )}
       {/* <Pizza
         name="Pizza Salamino"
         ingredients="Tomato, mozarella, ham, aragula, and burrata cheese"
@@ -95,6 +103,8 @@ function Menu() {
 }
 
 function Pizza(props) {
+  if (props.pizzaObj.soldOut) return null;
+
   return (
     <li className="pizza">
       <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
@@ -119,10 +129,27 @@ function Footer() {
 
   return (
     <footer className="footer">
-      © {new Date().toLocaleTimeString()} We are currently open
+      {isOpen ? (
+        <Order closeHours={closeHours} />
+      ) : (
+        <p>
+          we happy to welcome you between {openHours}:00 and {closeHours}:00 .
+        </p>
+      )}
     </footer>
   );
   //React.createElement("footer", null, "© We are currently open");
+}
+
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        we're open until {props.closeHours}:00pm. Come visit us or order online!
+      </p>
+      <button className="btn">Order now</button>
+    </div>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
